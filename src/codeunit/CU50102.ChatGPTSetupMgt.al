@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-codeunit 50122 "ChatGPT Setup Mgt"
+codeunit 50102 "ChatGPT Setup Mgt"
 {
     SingleInstance = true;
 

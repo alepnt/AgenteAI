@@ -18,7 +18,7 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
             part(SalesChatGPTHistory; "ChatGPT Log FactBox")
             {
                 ApplicationArea = All;
-                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = const(RecId);
+                SubPageLink = "Conversation Id" = const(ConversationId), "Source Record Id" = const(RecId);
                 Visible = HistoryEnabled;
             }
         }
