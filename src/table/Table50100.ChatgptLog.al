@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-table 50102 "ChatGPT Log"
+table 50100 "ChatGPT Log"
 {
     Caption = 'ChatGPT Log';
     DataClassification = CustomerContent;

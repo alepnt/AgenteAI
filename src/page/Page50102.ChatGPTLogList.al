@@ -1,22 +1,20 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-page 50112 "ChatGPT Log Card"
+page 50102 "ChatGPT Log List"
 {
-    PageType = Card;
+    PageType = List;
     SourceTable = "ChatGPT Log";
     ApplicationArea = All;
-    Caption = 'ChatGPT Log Card';
+    Caption = 'ChatGPT Log';
+    UsageCategory = History;
 
     layout
     {
         area(content)
         {
-            group(General)
+            repeater(Group)
             {
                 field("Entry No."; Rec."Entry No.")
                 {
                     ApplicationArea = All;
-                    Editable = false;
                 }
                 field("Conversation Id"; Rec."Conversation Id")
                 {
@@ -30,27 +28,29 @@ page 50112 "ChatGPT Log Card"
                 {
                     ApplicationArea = All;
                 }
-                field("Source Page Id"; Rec."Source Page Id")
-                {
-                    ApplicationArea = All;
-                }
-                field("Source Record Id"; Rec."Source Record Id")
-                {
-                    ApplicationArea = All;
-                }
-            }
-            group(Payload)
-            {
                 field("Request"; Rec."Request")
                 {
                     ApplicationArea = All;
-                    MultiLine = true;
                 }
                 field("Response"; Rec."Response")
                 {
                     ApplicationArea = All;
-                    MultiLine = true;
                 }
+            }
+        }
+    }
+
+    actions
+    {
+        area(processing)
+        {
+            action(OpenCard)
+            {
+                Caption = 'Card';
+                Image = Card;
+                RunObject = page "ChatGPT Log Card";
+                RunPageLink = "Entry No." = field("Entry No.");
+                ApplicationArea = All;
             }
         }
     }

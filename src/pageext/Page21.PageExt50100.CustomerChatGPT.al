@@ -1,5 +1,3 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
 pageextension 50100 CustomerChatGPT extends "Customer Card"
 {
     layout

@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-pageextension 50103 SalesOrderChatGPT extends "Sales Order"
+pageextension 50101 SalesOrderChatGPT extends "Sales Order"
 {
     layout
     {

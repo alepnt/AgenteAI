@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-codeunit 50120 "ChatGPT Connector"
+codeunit 50100 "ChatGPT Connector"
 {
     SingleInstance = true;
 

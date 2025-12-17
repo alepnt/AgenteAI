@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-codeunit 50121 "ChatGPT Prompt Builder"
+codeunit 50101 "ChatGPT Prompt Builder"
 {
     /// <summary>Creates a user role message containing the provided prompt.</summary>
     procedure BuildUserMessage(Prompt: Text): JsonObject

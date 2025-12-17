@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-page 50113 "ChatGPT Log FactBox"
+page 50101 "ChatGPT Log FactBox"
 {
     PageType = ListPart;
     SourceTable = "ChatGPT Log";

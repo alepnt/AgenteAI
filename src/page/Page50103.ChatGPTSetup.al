@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-page 50110 "ChatGPT Setup"
+page 50103 "ChatGPT Setup"
 {
     PageType = Card;
     ApplicationArea = All;

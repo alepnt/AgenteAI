@@ -1,6 +1,4 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
-codeunit 50140 "ChatGPT Tests"
+codeunit 50103 "ChatGPT Tests"
 {
     Subtype = Test;
 
