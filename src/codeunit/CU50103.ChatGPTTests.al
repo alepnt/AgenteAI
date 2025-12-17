@@ -10,10 +10,11 @@ codeunit 50103 "ChatGPT Tests"
         Messages: JsonArray;
         ResponseText: Text;
         ConversationId: Guid;
+        SourceRecordId: RecordId;
     begin
         DeleteSetup();
         Messages := BuildSimpleMessage();
-        asserterror Connector.SendChat(Messages, ResponseText, ConversationId, 0, 0);
+        asserterror Connector.SendChat(Messages, ResponseText, ConversationId, 0, SourceRecordId);
     end;
 
     [Test]
@@ -36,15 +37,15 @@ codeunit 50103 "ChatGPT Tests"
         Messages: JsonArray;
         PayloadText: Text;
         PayloadObj: JsonObject;
-        ModelValue: JsonValue;
-        TokensValue: JsonValue;
+        ModelToken: JsonToken;
+        TokensToken: JsonToken;
         Assert: Codeunit Assert;
     begin
         Messages := BuildSimpleMessage();
         PayloadText := Connector.BuildPayload('gpt-4o-mini', Messages, 0.5, 1000);
         PayloadObj.ReadFrom(PayloadText);
-        Assert.IsTrue(PayloadObj.Get('model', ModelValue), 'Model is missing.');
-        Assert.IsTrue(PayloadObj.Get('max_tokens', TokensValue), 'Max tokens missing.');
+        Assert.IsTrue(PayloadObj.Get('model', ModelToken), 'Model is missing.');
+        Assert.IsTrue(PayloadObj.Get('max_tokens', TokensToken), 'Max tokens missing.');
     end;
 
     /// <summary>Builds a minimal messages array for use in test scenarios.</summary>

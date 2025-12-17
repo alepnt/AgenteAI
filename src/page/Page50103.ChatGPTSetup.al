@@ -53,23 +53,21 @@ page 50103 "ChatGPT Setup"
     {
         area(processing)
         {
-            action(SetApiKey)
-            {
-                Caption = 'Imposta API Key';
-                Image = Key;
-                ApplicationArea = All;
+                action(SetApiKey)
+                {
+                    Caption = 'Imposta API Key';
+                    ApplicationArea = All;
                 /// <summary>Prompts the user for a new API key and stores it securely.</summary>
                 trigger OnAction()
-                var
-                    ApiKey: Text;
-                    SetupMgt: Codeunit "ChatGPT Setup Mgt";
-                    Dialog: Dialog;
-                begin
-                    if not Confirm('Do you want to set or replace the stored API key?', false) then
-                        exit;
+                    var
+                        ApiKey: Text;
+                        SetupMgt: Codeunit "ChatGPT Setup Mgt";
+                    begin
+                        if not Confirm('Do you want to set or replace the stored API key?', false) then
+                            exit;
 
-                    if not Dialog.Input('API Key', ApiKey) then
-                        exit;
+                        if not Input('API Key', ApiKey) then
+                            exit;
 
                     if ApiKey = '' then
                         Error('API key must be provided.');
@@ -78,11 +76,10 @@ page 50103 "ChatGPT Setup"
                     CurrPage.Update(false);
                 end;
             }
-            action(ClearApiKey)
-            {
-                Caption = 'Rimuovi API Key';
-                Image = Delete;
-                ApplicationArea = All;
+                action(ClearApiKey)
+                {
+                    Caption = 'Rimuovi API Key';
+                    ApplicationArea = All;
                 /// <summary>Removes the stored API key from setup.</summary>
                 trigger OnAction()
                 var
