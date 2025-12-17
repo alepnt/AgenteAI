@@ -7,7 +7,7 @@ pageextension 50100 CustomerChatGPT extends "Customer Card"
             part(ChatGPTHistory; "ChatGPT Log FactBox")
             {
                 ApplicationArea = All;
-                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = field(RecId);
+                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = const(RecId);
                 Visible = HistoryEnabled;
             }
         }
@@ -19,12 +19,6 @@ pageextension 50100 CustomerChatGPT extends "Customer Card"
                 Editable = false;
                 Visible = false;
                 ToolTip = 'Stores the conversation identifier used to link log entries.';
-            }
-            field(RecId; Rec.RecordId())
-            {
-                ApplicationArea = All;
-                Visible = false;
-                ToolTip = 'Keeps the current record identifier for logging purposes.';
             }
         }
     }
@@ -65,9 +59,11 @@ pageextension 50100 CustomerChatGPT extends "Customer Card"
     begin
         SetupMgt.GetSetup(Setup);
         HistoryEnabled := Setup."History Enabled";
+        RecId := Rec.RecordId().TableNo;
     end;
 
     var
+        RecId: Integer;
         ConversationId: Guid;
         HistoryEnabled: Boolean;
 }

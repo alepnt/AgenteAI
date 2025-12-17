@@ -2,15 +2,6 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
 {
     layout
     {
-        addlast(FactBoxes)
-        {
-            part(SalesChatGPTHistory; "ChatGPT Log FactBox")
-            {
-                ApplicationArea = All;
-                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = field(RecId);
-                Visible = HistoryEnabled;
-            }
-        }
         addlast(General)
         {
             field("ChatGPT Conversation Id"; ConversationId)
@@ -20,13 +11,18 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
                 Visible = false;
                 ToolTip = 'Stores the conversation identifier used to link log entries.';
             }
-            field(RecId; Rec.RecordId())
+
+        }
+        addlast(FactBoxes)
+        {
+            part(SalesChatGPTHistory; "ChatGPT Log FactBox")
             {
                 ApplicationArea = All;
-                Visible = false;
-                ToolTip = 'Keeps the current record identifier for logging purposes.';
+                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = const(RecId);
+                Visible = HistoryEnabled;
             }
         }
+
     }
 
     actions
@@ -65,9 +61,11 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
     begin
         SetupMgt.GetSetup(Setup);
         HistoryEnabled := Setup."History Enabled";
+        RecId := rec.RecordId().TableNo;
     end;
 
     var
+        RecId: Integer;
         ConversationId: Guid;
         HistoryEnabled: Boolean;
 }

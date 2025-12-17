@@ -1,5 +1,3 @@
-namespace DefaultPublisher.CH_Platform_AI;
-
 table 50101 "ChatGPT Setup"
 {
     Caption = 'ChatGPT Setup';
@@ -47,7 +45,7 @@ table 50101 "ChatGPT Setup"
         field(55; "API Key"; Text[250])
         {
             Caption = 'API Key';
-            DataClassification = Credentials;
+            DataClassification = CustomerContent;
             ExtendedDatatype = Masked;
             Description = 'Stores the secret ChatGPT API key for authenticated requests.';
         }

@@ -48,7 +48,7 @@ page 50102 "ChatGPT Log List"
             {
                 Caption = 'Card';
                 Image = Card;
-                RunObject = page "ChatGPT Log Card";
+                RunObject = page "ChatGPT Log Setup";
                 RunPageLink = "Entry No." = field("Entry No.");
                 ApplicationArea = All;
             }
