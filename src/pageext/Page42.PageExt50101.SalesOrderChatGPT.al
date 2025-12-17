@@ -4,12 +4,19 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
     {
         addlast(General)
         {
-            field("ChatGPT Conversation Id"; ConversationId)
+            field("ChatGPT Conversation Id"; Rec."ChatGPT Conversation Id")
             {
                 ApplicationArea = All;
                 Editable = false;
                 Visible = false;
                 ToolTip = 'Stores the conversation identifier used to link log entries.';
+            }
+
+            field("Record Id"; Rec.RecordId())
+            {
+                ApplicationArea = All;
+                Editable = false;
+                Visible = false;
             }
 
         }
@@ -18,7 +25,7 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
             part(SalesChatGPTHistory; "ChatGPT Log FactBox")
             {
                 ApplicationArea = All;
-                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = const(RecId);
+                SubPageLink = "Conversation Id" = field("ChatGPT Conversation Id"), "Source Record Id" = field("Record Id");
                 Visible = HistoryEnabled;
             }
         }
@@ -32,23 +39,28 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
             action(AskChatGPT)
             {
                 Caption = 'Chiedi a ChatGPT';
-                Image = Chat;
                 ApplicationArea = All;
                 /// <summary>Builds a sales order prompt and sends it to ChatGPT, displaying the reply.</summary>
                 trigger OnAction()
-                var
-                    PromptBuilder: Codeunit "ChatGPT Prompt Builder";
-                    Connector: Codeunit "ChatGPT Connector";
-                    Messages: JsonArray;
-                    ResponseText: Text;
-                    UserPrompt: Text;
-                begin
-                    UserPrompt := PromptBuilder.BuildExplanationPrompt(PromptBuilder.BuildSalesOrderContext(Rec));
-                    Messages := PromptBuilder.ComposeMessages('You are a helpful assistant for sales orders.', UserPrompt);
-                    Connector.SendChat(Messages, ResponseText, ConversationId, Page::"Sales Order", Rec.RecordId());
-                    Message(ResponseText);
-                    CurrPage.Update(false);
-                end;
+                    var
+                        PromptBuilder: Codeunit "ChatGPT Prompt Builder";
+                        Connector: Codeunit "ChatGPT Connector";
+                        Messages: JsonArray;
+                        ResponseText: Text;
+                        UserPrompt: Text;
+                        ConversationId: Guid;
+                    begin
+                        ConversationId := Rec."ChatGPT Conversation Id";
+                        UserPrompt := PromptBuilder.BuildExplanationPrompt(PromptBuilder.BuildSalesOrderContext(Rec));
+                        Messages := PromptBuilder.ComposeMessages('You are a helpful assistant for sales orders.', UserPrompt);
+                        Connector.SendChat(Messages, ResponseText, ConversationId, Page::"Sales Order", Rec.RecordId());
+                        if Rec."ChatGPT Conversation Id" <> ConversationId then begin
+                            Rec."ChatGPT Conversation Id" := ConversationId;
+                            Modify(true);
+                        end;
+                        Message(ResponseText);
+                        CurrPage.Update(false);
+                    end;
             }
         }
     }
@@ -61,11 +73,8 @@ pageextension 50101 SalesOrderChatGPT extends "Sales Order"
     begin
         SetupMgt.GetSetup(Setup);
         HistoryEnabled := Setup."History Enabled";
-        RecId := rec.RecordId().TableNo;
     end;
 
-    var
-        RecId: Integer;
-        ConversationId: Guid;
-        HistoryEnabled: Boolean;
+var
+    HistoryEnabled: Boolean;
 }

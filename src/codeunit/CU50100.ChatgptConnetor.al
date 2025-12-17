@@ -38,6 +38,8 @@ codeunit 50100 "ChatGPT Connector"
         Request: HttpRequestMessage;
         Response: HttpResponseMessage;
         Content: HttpContent;
+        ContentHeaders: HttpHeaders;
+        RequestHeaders: HttpHeaders;
         BodyText: Text;
         ResponseBody: Text;
         IsSuccess: Boolean;
@@ -48,7 +50,7 @@ codeunit 50100 "ChatGPT Connector"
         if not SetupMgt.HasApiKey() then
             Error('API key is missing.');
 
-        if ConversationId = Guid::EmptyGuid() then
+        if IsNullGuid(ConversationId) then
             ConversationId := CreateGuid();
 
         BodyText := BuildPayload(Setup."Default Model", Messages, ChooseTemperature(Setup), Setup."Max Tokens");
@@ -56,10 +58,12 @@ codeunit 50100 "ChatGPT Connector"
         Request.SetRequestUri(Setup."Endpoint");
         Request.Method := 'POST';
         Content.WriteFrom(BodyText);
-        Content.GetHeaders().Clear();
-        Content.GetHeaders().Add('Content-Type', 'application/json');
+        Content.GetHeaders(ContentHeaders);
+        ContentHeaders.Clear();
+        ContentHeaders.Add('Content-Type', 'application/json');
         Request.Content := Content;
-        Request.GetHeaders().Add('Authorization', StrSubstNo('Bearer %1', SetupMgt.GetApiKey()));
+        Request.GetHeaders(RequestHeaders);
+        RequestHeaders.Add('Authorization', StrSubstNo('Bearer %1', SetupMgt.GetApiKey()));
 
         OnBeforeSendRequest(Request, BodyText, Setup);
 
@@ -83,28 +87,33 @@ codeunit 50100 "ChatGPT Connector"
     procedure ParseResponse(ResponseBody: Text): Text
     var
         JsonResponse: JsonObject;
+        ChoicesToken: JsonToken;
         Choices: JsonArray;
         ChoiceToken: JsonToken;
         ChoiceObject: JsonObject;
+        MessageToken: JsonToken;
         MessageObj: JsonObject;
-        ContentValue: JsonValue;
+        ContentToken: JsonToken;
     begin
         if not JsonResponse.ReadFrom(ResponseBody) then
             Error('Invalid response format.');
 
-        if not JsonResponse.Get('choices', Choices) then
+        if not JsonResponse.Get('choices', ChoicesToken) then
             Error('The service response does not contain choices.');
+
+        Choices := ChoicesToken.AsArray();
 
         if not Choices.Get(0, ChoiceToken) then
             Error('The service response does not contain any choice.');
 
         ChoiceObject := ChoiceToken.AsObject();
-        if not ChoiceObject.Get('message', MessageObj) then
+        if not ChoiceObject.Get('message', MessageToken) then
             Error('The service response does not contain a message.');
-        if not MessageObj.Get('content', ContentValue) then
+        MessageObj := MessageToken.AsObject();
+        if not MessageObj.Get('content', ContentToken) then
             Error('The service response does not contain content.');
 
-        exit(ContentValue.AsValue().AsText());
+        exit(ContentToken.AsValue().AsText());
     end;
 
     /// <summary>Returns the temperature configured in setup.</summary>
