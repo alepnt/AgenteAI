@@ -1,0 +1,20 @@
+{
+    "version": "1.0.0.0",
+    "configurations": [
+        {
+            "name": "CloudDev",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "CloudDev",
+            "tenant": "9841018a-9180-499a-8937-23ef73cf3431",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        }
+    ]
+}
